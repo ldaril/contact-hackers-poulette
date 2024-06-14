@@ -126,3 +126,9 @@ So let's create an index page.
 </form>
 ```
 
+## Add route to app.py
+```python
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+```
