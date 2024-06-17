@@ -7,17 +7,18 @@
 + [x] Create an app.py
 + [x] Create index.html page
 + [x] Create contact.html page and add contact route to app.py
-+ [ ] Create a common layout for both pages
++ [x] Create a common layout for both pages
 + [x] In the contact page, create a HTML form
-    + [ ] Add some styles so my eyes don't bleed
+    + [x] Add some styles so my eyes don't bleed
     + [ ] Better way to add countries
-+ [ ] Send data 
++ [ ] Retrieve data 
 + [ ] Validate form input
 + [ ] Sanitize form input
-+ [ ] Implement honeypot anti-spam technique
 + [ ] Display error messages
 + [ ] Add thank you page with summary
 + [ ] Add DB
++ [ ] Implement honeypot anti-spam technique
+
 
 ## Basic structure
 
@@ -180,4 +181,15 @@ While contact.html will look like
     <form><!-- ... --></form>
 {% endblock %}
 ```
+
+## Adding some styles 
+Flask expects your styles to be in the folder `static/`.
+Then in the layout.html file, we can create a dynamic URL with the special flask method `url_for()`.
+
+```html
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+```
+
+
+
 
