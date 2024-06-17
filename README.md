@@ -126,9 +126,58 @@ So let's create an index page.
 </form>
 ```
 
+
 ## Add route to app.py
 ```python
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
 ```
+
+## Create a common layout 
+There is a lot of common code between the index page and the contact page.
+Creating a common layout that you then extends depending what you need makes changing things easier, as you don't have to go to multiple places to change it.
+This reduces the amount of work you have to do and the possibility of forgetting a file.  (DRY: Don't Repeat Yourself)
+
+This is called [template inheritance](https://jinja.palletsprojects.com/en/3.1.x/templates/#template-inheritance)
+
+The templating engine used by Flask is Jinja.  
+Docs: https://jinja.palletsprojects.com/en/3.1.x/
+
+Some other templating engines: [Twig](https://twig.symfony.com/) for the PHP framework symfony, Blade for Laravel...
+
+In layout.html we'll have
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>🐔 Hackers Poulette 🐔</title>
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+</html>
+```
+
+And index.html will look like this  
+```html
+{% extends layout.html%}
+
+{% block body %}
+    <h1>We are 🐔 Hackers Poulette 🐔 !</h1>
+    <p>Welcome to Hackers Poulette</p>
+{% endblock %}
+```
+  
+While contact.html will look like 
+```html
+{% extends layout.html%}
+
+{% block body %}
+    <h1>Contact us 🐔</h1>
+    <form><!-- ... --></form>
+{% endblock %}
+```
+

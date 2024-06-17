@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>🐔 Hackers Poulette 🐔</title>
-    </head>
-    <body>
-        <h1>We are 🐔 Hackers Poulette 🐔 !</h1>
-        <p>Welcome to Hackers Poulette</p>
-    </body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}
+    🐔 Hackers Poulette 🐔
+{% endblock %}
+
+{% block body %}
+    <h1>We are 🐔 Hackers Poulette 🐔 !</h1>
+    <p>Welcome to Hackers Poulette</p>
+    <a href="/contact">Contact us</a>
+{% endblock %}
