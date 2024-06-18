@@ -11,9 +11,9 @@
 + [x] In the contact page, create a HTML form
     + [x] Add some styles so my eyes don't bleed
     + [ ] Better way to add countries
-+ [ ] Retrieve data 
-+ [ ] Validate form input
-+ [ ] Sanitize form input
++ [x] Retrieve data 
++ [ ] Validate form inputs
++ [ ] Sanitize form inputs
 + [ ] Display error messages
 + [ ] Add thank you page with summary
 + [ ] Add DB
@@ -221,6 +221,56 @@ We see its type is `ImmutableMultDict`, which is a type of dictionnary specific 
 
 We can display the fields with `{{ form['first_name'] }}`, `{{ form['email'] }} `...
 
-## Validate the data
+## Validate the form data
 
-We now need to prevent the form to be submitted if all the mandatory fields are not present.
+We now need to prevent the form to be submitted if all the mandatory fields are not present. 
+In the `submit_form()` function, we'll create an `errors` dictionnary that will contains the errors for the missing fields.
+
+```python
+@app.route("/submit-form", methods=["POST"])
+def submit_form():
+    errors = {}
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    email = request.form['email']
+
+    # <...>
+
+   if not first_name:
+        errors['first_name'] = 'First name is required.'
+    if not last_name:
+        errors['last_name'] = 'Last name is required.'
+    if not email:
+        errors['email'] = 'Email is required.'
+```
+
+If a field is missing, we store a message in the errors dictionnary that we'll then display back on the contact form under the field.
+
+```html
+    <div>
+        <label for="first_name">First Name</label>         
+        <input name="first_name" type="text" id="first_name" placeholder="First Name">
+        {% if errors.first_name %}
+            <span class="error">{{ errors.first_name }}</span>
+        {% endif %}
+    </div>
+    <div>
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" placeholder="Last Name">
+        {% if errors.last_name %}
+            <span class="error">{{ errors.last_name }}</span>
+        {% endif %}
+    </div>
+    <...>
+```
+
+We modify the `contact()` method to pass an empty `errors` dictionnary to the template:
+Otherwise, we'll have an error message, when trying to display the template because if it's the first time displaying the contact form, then the errors variable doesn't exist yet.  
+
+```python
+@app.route("/contact")
+def contact():
+    return render_template("contact.html", errors={})
+```
+
+To test that it works, we'll also need to remove the required attributes from the form fields, which provides client-side validation but is enough by itself.

@@ -76,3 +76,10 @@ button[type="submit"]:hover {
     align-items: center;
     margin-right: 10px;
 }
+
+.error {
+    display: block;
+    margin-top: 5px;
+    color: #e04542;
+    font-weight: bold;
+}
