@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>Thank you for your message</h1>
+
+{{ form }}
+
+<div>First name: {{ form['first_name'] }}</div>
+<div>Last name: {{ form['last_name'] }}</div>
+<div>Email: {{ form['email'] }}</div>
+<div>Gender: {{ form['gender']  }}</div>
+<div>Country: {{ form['country']  }}</div>
+<div>Subject: {{ form['subjects'] }}</div>
+<div>Message: {{ form['message'] }}</div>
+
+{% endblock %}

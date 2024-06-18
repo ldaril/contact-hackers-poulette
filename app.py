@@ -11,3 +11,7 @@ def index():
 def contact():
     return render_template("contact.html")
 
+
+@app.route("/submit-form", methods=["POST"])
+def submit_form():
+    return render_template("message_sent.html", form=request.form)

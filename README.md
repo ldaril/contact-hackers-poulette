@@ -190,6 +190,37 @@ Then in the layout.html file, we can create a dynamic URL with the special flask
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 ```
 
+## Retrieve the data
 
+Now that we have a form, we need to retrieve the data that a user would input.
+The form action attribute is `/submit-form`
+We add a route that accepts POST requests that will return to the template `message_sent.html`.
 
+```python
+@app.route("/submit-form", methods=["POST"])
+def submit_form():
+    return render_template("message_sent.html")
+```
 
+https://flask.palletsprojects.com/en/3.0.x/quickstart/#accessing-request-data
+
+In Flask, we use the [request object](https://flask.palletsprojects.com/en/3.0.x/quickstart/#the-request-object) to access request data.
+
+This is one of the library we import on the first line of app.py.
+`from flask import Flask, render_template, request`
+
+With the variable `request.form`, we can access data send in a POST request, so we add it as a second argument after the route to the  `render_template()` function, in order to have access to it in the template.
+```python
+return render_template("message_sent.html", form=request.form)
+```
+
+If we just display the form with `{{ form }}`, we get:
+![form.request object](./assets/form_request.png)
+
+We see its type is `ImmutableMultDict`, which is a type of dictionnary specific to Flask.
+
+We can display the fields with `{{ form['first_name'] }}`, `{{ form['email'] }} `...
+
+## Validate the data
+
+We now need to prevent the form to be submitted if all the mandatory fields are not present.
