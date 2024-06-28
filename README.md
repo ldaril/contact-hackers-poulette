@@ -12,11 +12,13 @@
     + [x] Add some styles so my eyes don't bleed
     + [ ] Better way to add countries
 + [x] Retrieve data 
++ [x] Display error messages in the form
 + [ ] Validate form inputs
 + [ ] Sanitize form inputs
-+ [ ] Display error messages
-+ [ ] Add thank you page with summary
-+ [ ] Add DB
++ [x] Add thank you page with summary
++ [ ] Add DB    
+    + [ ] SQL
+    + [x] MongoDB
 + [ ] Implement honeypot anti-spam technique
 
 
@@ -221,7 +223,7 @@ We see its type is `ImmutableMultDict`, which is a type of dictionnary specific 
 
 We can display the fields with `{{ form['first_name'] }}`, `{{ form['email'] }} `...
 
-## Validate the form data
+## Display error messages for empty fields
 
 We now need to prevent the form to be submitted if all the mandatory fields are not present. 
 In the `submit_form()` function, we'll create an `errors` dictionnary that will contains the errors for the missing fields.
@@ -274,3 +276,82 @@ def contact():
 ```
 
 To test that it works, we'll also need to remove the required attributes from the form fields, which provides client-side validation but is enough by itself.
+
+## Preventing XSS
+
+[OWASP](https://owasp.org/www-community/attacks/xss/)
+
+In Flask, using the method `render_template()` already provides protection against XSS.
+
+> Flask configures Jinja2 to automatically escape all values unless explicitly told otherwise. This should rule out all XSS problems caused in templates
+
+[Flask docs - Cross-Site Scripting (XSS)](https://flask.palletsprojects.com/en/1.1.x/security/#cross-site-scripting-xss)
+
+
+## Connecting to databases
+
+### MongoDB
+
+We'll use mongodb via **docker**.
+
+To pull a mongodb image, create and run a mongodb container:
+`docker pull mongo`
+`docker run -d -p 27017:27017 --name mongodb mongo`
+
+We will install the package [pymongo](https://www.mongodb.com/docs/drivers/pymongo/) in order to interact with MongoDB. 
+The package pymongo provides a way to connect to MongoDB, perform CRUD (Create, Read, Update, Delete) operations, and execute other database commands from within a Python application. 
+
+`pip install pymongo`
+
+Then we import it in `app.py`
+
+```python
+from pymongo import MongoClient
+
+# ...
+
+# Connect to MongoDB
+client = MongoClient('localhost', 27017)  # Connect to the Docker container
+db = client['hp_db']
+collection = db['messages']
+
+# ...
+
+# We insert data into MongoDB
+# In method submit_form
+
+if errors:
+    return render_template('contact.html', errors=errors, form=request.form)
+else:
+    collection.insert_one({
+        'first_name': first_name,
+        'last_name': last_name,
+        'email': email,
+        'country': country,
+        'gender': gender, 
+        'subject': subject, 
+        'message': message
+    })
+    return render_template("message_sent.html", form=request.form)
+```
+
+#### Verify that data has been inserted in the db
+
+```bash
+# Run container
+docker exec -it mongodb mongosh
+
+# Show databases
+show dbs
+
+# We can see that the database hp_db has been created 
+
+use hp_db
+
+# Display messages collection
+db.messages.find().pretty()
+```
+
+![Data inserted in mongodb](./assets/mongodb_flask.png)
+
+It works ! :) 
